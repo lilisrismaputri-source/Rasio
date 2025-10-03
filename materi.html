@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Materi Lengkap Rasio (Perbandingan)</title>
@@ -114,32 +116,22 @@
         <h3>1. Perbandingan Senilai (Proporsi Langsung)</h3>
         <div class="concept-box">
             <strong>Perbandingan Senilai</strong> terjadi jika satu variabel bertambah, maka variabel lainnya ikut bertambah dengan rasio yang sama (dan sebaliknya).
-            <br>
-            <strong>Contoh:</strong> Semakin banyak barang yang dibeli, semakin besar total harganya. Semakin jauh jarak yang ditempuh, semakin banyak bensin yang dibutuhkan.
             <br><br>
             <strong>Rumus:</strong>
-            <p style="text-align:center; font-size: 1.2em;"><code>a₁ / b₁ = a₂ / b₂</code></p>
+            <p style="text-align:center; font-size: 1.5em;">\(\frac{a_1}{b_1} = \frac{a_2}{b_2}\)</p>
         </div>
 
         <div class="example-box">
             <h3>Contoh Soal Cerita (Senilai)</h3>
-            <p>
-                Sebuah mobil memerlukan 5 liter bensin untuk menempuh jarak 60 km. Jika mobil tersebut akan menempuh jarak 180 km, berapa liter bensin yang dibutuhkan?
-            </p>
+            <p> Sebuah mobil memerlukan 5 liter bensin untuk menempuh jarak 60 km. Jika mobil tersebut akan menempuh jarak 180 km, berapa liter bensin yang dibutuhkan? </p>
             <p><strong>Penyelesaian:</strong></p>
             <ol>
                 <li><strong>Identifikasi variabel:</strong><br>
-                    - Bensin (a): a₁ = 5 liter, a₂ = ?<br>
-                    - Jarak (b): b₁ = 60 km, b₂ = 180 km
+                    - Bensin (a): \(a_1\) = 5 liter, \(a_2\) = ?<br>
+                    - Jarak (b): \(b_1\) = 60 km, \(b_2\) = 180 km
                 </li>
-                <li><strong>Masukkan ke rumus:</strong><br>
-                    <code>5 / 60 = a₂ / 180</code>
-                </li>
-                <li><strong>Selesaikan persamaan (kali silang):</strong><br>
-                    <code>a₂ = (5 / 60) * 180</code><br>
-                    <code>a₂ = (1 / 12) * 180</code><br>
-                    <code>a₂ = 15</code>
-                </li>
+                <li><strong>Masukkan ke rumus:</strong> \(\frac{5}{60} = \frac{a_2}{180}\)</li>
+                <li><strong>Selesaikan persamaan:</strong> \(a_2 = \frac{5 \times 180}{60} = 15\)</li>
             </ol>
             <p><strong>Jadi, bensin yang dibutuhkan adalah 15 liter.</strong></p>
         </div>
@@ -147,39 +139,25 @@
         <h3>2. Perbandingan Berbalik Nilai</h3>
         <div class="concept-box">
             <strong>Perbandingan Berbalik Nilai</strong> terjadi jika satu variabel bertambah, maka variabel lainnya justru berkurang (dan sebaliknya).
-            <br>
-            <strong>Contoh:</strong> Semakin banyak pekerja yang membangun rumah, semakin sedikit waktu yang dibutuhkan. Semakin tinggi kecepatan mobil, semakin singkat waktu tempuhnya.
             <br><br>
             <strong>Rumus:</strong>
-            <p style="text-align:center; font-size: 1.2em;"><code>a₁ / b₂ = a₂ / b₁  (atau a₁ * b₁ = a₂ * b₂)</code></p>
-            <small>Perhatikan bahwa posisi b₁ dan b₂ dibalik, inilah kunci dari perbandingan berbalik nilai.</small>
+            <p style="text-align:center; font-size: 1.5em;">\(a_1 \times b_1 = a_2 \times b_2\)</p>
         </div>
 
         <div class="example-box">
             <h3>Contoh Soal Cerita (Berbalik Nilai)</h3>
-            <p>
-                Suatu proyek pembangunan jembatan dapat diselesaikan oleh 10 pekerja dalam waktu 60 hari. Jika proyek tersebut ingin diselesaikan dalam 40 hari, berapa banyak pekerja yang harus ditambahkan?
-            </p>
+            <p> Suatu proyek dapat diselesaikan oleh 10 pekerja dalam waktu 60 hari. Jika proyek tersebut ingin diselesaikan dalam 40 hari, berapa banyak pekerja tambahan yang dibutuhkan? </p>
             <p><strong>Penyelesaian:</strong></p>
             <ol>
                 <li><strong>Identifikasi variabel:</strong><br>
-                    - Pekerja (a): a₁ = 10 pekerja, a₂ = ?<br>
-                    - Waktu (b): b₁ = 60 hari, b₂ = 40 hari
+                    - Pekerja (a): \(a_1\) = 10 pekerja, \(a_2\) = ?<br>
+                    - Waktu (b): \(b_1\) = 60 hari, \(b_2\) = 40 hari
                 </li>
-                <li><strong>Masukkan ke rumus (a₁ * b₁ = a₂ * b₂):</strong><br>
-                    <code>10 * 60 = a₂ * 40</code>
-                </li>
-                <li><strong>Selesaikan persamaan:</strong><br>
-                    <code>600 = 40 * a₂</code><br>
-                    <code>a₂ = 600 / 40</code><br>
-                    <code>a₂ = 15</code>
-                </li>
-                 <li><strong>Hitung tambahan pekerja:</strong><br>
-                    Tambahan = Total pekerja baru - Pekerja awal<br>
-                    Tambahan = 15 - 10 = 5
-                </li>
+                <li><strong>Masukkan ke rumus:</strong> \(10 \times 60 = a_2 \times 40\)</li>
+                <li><strong>Selesaikan persamaan:</strong> \(600 = 40 \times a_2 \Rightarrow a_2 = \frac{600}{40} = 15\)</li>
+                <li><strong>Hitung tambahan pekerja:</strong> 15 - 10 = 5</li>
             </ol>
-            <p><strong>Jadi, pekerja yang harus ditambahkan adalah 5 orang.</strong></p>
+            <p><strong>Jadi, pekerja tambahan yang dibutuhkan adalah 5 orang.</strong></p>
         </div>
         
         <h2>🚀 Video Penjelasan Tambahan</h2>

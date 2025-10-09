@@ -4,17 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resep Ajaib Koki Cilik</title>
-  <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resep Ajaib Koki Cilik</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&display=swap" rel="stylesheet">
-
     <style>
         body {
-            font-family: 'Comic Relief', cursive;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
             background: linear-gradient(135deg, #f0e68c, #ffebcd);
             display: flex;
             justify-content: center;
@@ -38,6 +30,45 @@
             color: #d2691e;
         }
 
+        /* --- STYLE BARU UNTUK PILIHAN LEVEL --- */
+        #level-selection-screen h2 {
+            margin-bottom: 30px;
+        }
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 20px;
+        }
+        .level-button {
+            background-color: #ffe4b5;
+            border: 2px solid #d2691e;
+            border-radius: 15px;
+            padding: 20px 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            position: relative;
+        }
+        .level-button:hover {
+            transform: translateY(-5px);
+            background-color: #ffdab9;
+        }
+        .level-button.locked {
+            background-color: #f5f5f5;
+            border-color: #ccc;
+            color: #aaa;
+            cursor: not-allowed;
+        }
+        .level-button.locked .lock-icon {
+            font-size: 2em;
+        }
+        .level-button.locked:hover {
+            transform: none;
+            background-color: #f5f5f5;
+        }
+        /* --- AKHIR STYLE BARU --- */
+
         .level-info, .score-info {
             font-size: 1.2em;
             margin-bottom: 20px;
@@ -59,16 +90,7 @@
             margin-top: 10px;
         }
         
-        #single-answer-input {
-            border: 2px solid #d2691e;
-            border-radius: 10px;
-            padding: 10px;
-            font-size: 1em;
-            text-align: center;
-            width: 150px;
-        }
-
-        .answer-input-group input {
+        #single-answer-input, .answer-input-group input {
             border: 2px solid #d2691e;
             border-radius: 10px;
             padding: 10px;
@@ -76,7 +98,10 @@
             text-align: center;
             width: 80px;
         }
-
+        #single-answer-input {
+            width: 150px;
+        }
+        
         button {
             background-color: #d2691e;
             color: white;
@@ -88,144 +113,104 @@
             margin-top: 15px;
             transition: transform 0.2s;
         }
-
         button:hover {
             transform: translateY(-3px);
             background-color: #e67e22;
         }
 
-        .feedback {
-            margin-top: 15px;
-            font-weight: bold;
-            min-height: 20px;
-        }
-
-        .feedback.correct {
-            color: #28a745;
-        }
-
-        .feedback.incorrect {
-            color: #dc3545;
-        }
-
-        .intro-screen, .end-screen, .student-name-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        .feedback { margin-top: 15px; font-weight: bold; min-height: 20px; }
+        .feedback.correct { color: #28a745; }
+        .feedback.incorrect { color: #dc3545; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
     <div class="game-container">
         <div id="intro-screen">
             <h1>🧑‍🍳 Resep Ajaib Koki Cilik 🧑‍🍳</h1>
-            <p>Halo, koki cilik! Selamat datang di dapur ajaib. Di sini, kamu akan belajar cara membuat resep yang lezat dengan takaran yang tepat menggunakan **rasio**.</p>
-            <p>Rasio adalah perbandingan yang membantu kita mengetahui seberapa banyak bahan yang dibutuhkan satu sama lain. Sama seperti resep kue yang harus tepat takarannya, kamu juga akan belajar membuat perbandingan yang benar.</p>
-            <p>Siap untuk petualangan ini?</p>
-            <div class="student-name-form">
-                <p>Siapa nama kamu?</p>
-                <input type="text" id="student-name-input" placeholder="Nama lengkap">
-                <button onclick="startGame()">Mulai Petualangan!</button>
-            </div>
+            <p>Halo, koki cilik! Selamat datang di dapur ajaib. Di sini, kamu akan belajar cara membuat resep yang lezat dengan takaran yang tepat menggunakan <strong>rasio</strong>.</p>
+            <p>Siapa nama kamu?</p>
+            <input type="text" id="student-name-input" placeholder="Nama lengkap">
+            <button onclick="startGame()">Mulai Petualangan!</button>
         </div>
         
-        <div id="game-screen" style="display: none;">
-            <div class="level-info">
-                <h2></h2>
-                <p></p>
+        <div id="level-selection-screen" class="hidden">
+            <h2>Pilih Level Petualanganmu!</h2>
+            <div class="level-grid">
+                <div class="level-button" onclick="selectLevel(1)">Level 1</div>
+                <div class="level-button" onclick="selectLevel(2)">Level 2</div>
+                <div class="level-button" onclick="selectLevel(3)">Level 3</div>
+                <div class="level-button" onclick="selectLevel(4)">Level 4</div>
+                <div class="level-button" onclick="selectLevel(5)">Level 5</div>
             </div>
-            <div class="score-info">
-                Skor: <span id="score">0</span> / 100
-            </div>
+             <button onclick="resetProgress()">Reset Progress</button>
+        </div>
+
+        <div id="game-screen" class="hidden">
+            <div class="level-info"><h2></h2><p></p></div>
+            <div class="score-info">Skor: <span id="score">0</span> / 100</div>
             <div class="question-box">
                 <p id="question-text"></p>
                 <div id="input-area">
-                    <div id="ratio-input-group" class="answer-input-group" style="display: none;">
-                        <input type="text" id="answer-input-1" placeholder="Angka 1">
-                        :
-                        <input type="text" id="answer-input-2" placeholder="Angka 2">
-                    </div>
-                    <input type="text" id="single-answer-input" placeholder="Jawaban" style="display: none;">
+                    <div id="ratio-input-group" class="answer-input-group hidden"><input type="text" id="answer-input-1">: <input type="text" id="answer-input-2"></div>
+                    <input type="text" id="single-answer-input" class="hidden">
                     <button id="submit-btn" onclick="checkAnswer()">Jawab!</button>
                 </div>
                 <div id="feedback-text" class="feedback"></div>
-                <button id="next-btn" style="display: none;" onclick="nextQuestion()">Soal Selanjutnya</button>
+                <button id="next-btn" class="hidden" onclick="nextQuestion()">Soal Selanjutnya</button>
+                <button id="back-to-levels-btn" class="hidden" onclick="showLevelSelection()">Kembali ke Pilihan Level</button>
             </div>
         </div>
 
-        <div id="end-screen" style="display: none;">
+        <div id="end-screen" class="hidden">
             <h1>🎉 Permainan Selesai! 🎉</h1>
             <p>Selamat, <span id="student-name-final"></span>!</p>
             <p>Kamu telah menyelesaikan semua level dengan total skor: <span id="final-score">0</span></p>
-            <button onclick="resetGame()">Main Lagi!</button>
+            <button onclick="showLevelSelection()">Pilih Level Lain</button>
         </div>
     </div>
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysexp3euhQ41MMLVweiCALnY3XctBAvayTxCSvOgksfMSZCvSNR3CM1zqc2IWLPbHT/exec';
-                
+        const SCRIPT_URL = 'URL_APPS_SCRIPT_GAME_ANDA';
+               
         const questions = {
-            level1: [
+             level1: [
                 { q: "Untuk membuat jus stroberi, Koki Cilik menggunakan 🍓 4 buah stroberi dan 🍎 8 buah apel. Berapa rasio stroberi terhadap apel?", a: "4:8" },
                 { q: "Koki Cilik membuat adonan pizza. Dia menggunakan 🍚 3 sendok tepung dan 💧 6 sendok air. Berapa rasio tepung terhadap air?", a: "3:6" },
                 { q: "Di dapur, ada 🥕 5 buah wortel dan 🍅 10 buah tomat. Berapa rasio wortel terhadap tomat?", a: "5:10" },
                 { q: "Koki Cilik memanggang kue. Dia menggunakan 🍫 2 batang cokelat dan 🥛 4 gelas susu. Berapa rasio cokelat terhadap susu?", a: "2:4" },
-                { q: "Untuk membuat puding, Koki Cilik mencampur 🍮 6 bungkus agar-agar dengan 🥛 12 gelas air. Berapa rasio agar-agar terhadap air?", a: "6:12" },
-                { q: "Koki Cilik membuat teh. Dia menggunakan 🍵 2 kantung teh dan 🍯 4 sendok madu. Berapa rasio teh terhadap madu?", a: "2:4" },
-                { q: "Untuk salad buah, ada 🥝 4 buah kiwi dan 🍌 8 buah pisang. Berapa rasio kiwi terhadap pisang?", a: "4:8" },
-                { q: "Ada 🥜 30 gram kacang dan 🍇 60 gram kismis. Berapa rasio kacang terhadap kismis?", a: "30:60" },
-                { q: "Ada 🍋 10 buah lemon dan 🍊 20 buah jeruk. Berapa rasio lemon terhadap jeruk?", a: "10:20" },
-                { q: "Koki Cilik membuat sosis. Dia mencampur 🥩 80 gram daging dan 🍞 40 gram tepung. Berapa rasio daging terhadap tepung?", a: "80:40" }
+                { q: "Untuk membuat puding, Koki Cilik mencampur 🍮 6 bungkus agar-agar dengan 🥛 12 gelas air. Berapa rasio agar-agar terhadap air?", a: "6:12" }
             ],
             level2: [
                 { q: "Untuk membuat adonan, Koki Cilik butuh 🍚 10 sendok tepung dan 💧 5 sendok air. Dalam bentuk paling sederhana, berapa rasio tepung terhadap air?", a: "2:1" },
                 { q: "Koki Cilik punya 🍎 12 apel dan 🍊 6 jeruk. Berapa rasio apel terhadap jeruk dalam bentuk paling sederhana?", a: "2:1" },
                 { q: "Koki Cilik mencampur 🍫 8 batang cokelat dengan 🥛 16 gelas susu. Sederhanakan rasio cokelat terhadap susu!", a: "1:2" },
                 { q: "Ada 🥕 15 wortel dan 🍅 20 tomat. Sederhanakan rasio wortel terhadap tomat!", a: "3:4" },
-                { q: "Untuk membuat jus, Koki Cilik memakai 🍓 9 buah stroberi dan 🍌 6 buah pisang. Sederhanakan rasio stroberi terhadap pisang!", a: "3:2" },
-                { q: "Koki Cilik punya 🥚 4 telur dan 🍞 8 lembar roti. Sederhanakan rasio telur terhadap roti!", a: "1:2" },
-                { q: "Ada 🥔 10 kentang dan 🧅 15 bawang. Sederhanakan rasio kentang terhadap bawang!", a: "2:3" },
-                { q: "Untuk sup, Koki Cilik butuh 🍗 24 gram ayam dan 🧂 8 gram garam. Sederhanakan rasio ayam terhadap garam!", a: "3:1" },
-                { q: "Koki Cilik punya 🥒 18 mentimun dan 🥬 24 lembar selada. Sederhanakan rasio mentimun terhadap selada!", a: "3:4" },
-                { q: "Ada 🍄 20 jamur dan 🌶️ 10 cabai. Sederhanakan rasio jamur terhadap cabai!", a: "2:1" }
+                { q: "Untuk membuat jus, Koki Cilik memakai 🍓 9 buah stroberi dan 🍌 6 buah pisang. Sederhanakan rasio stroberi terhadap pisang!", a: "3:2" }
             ],
             level3: [
                 { q: "Resep sosis menggunakan rasio daging dan tepung 🍖:🍚 = 3:2. Jika Koki Cilik menggunakan 12 kg daging, berapa kg tepung yang dibutuhkan?", a: "8" },
                 { q: "Rasio stroberi dan apel di keranjang buah adalah 🍓:🍎 = 1:2. Jika ada 5 stroberi, berapa jumlah apel?", a: "10" },
                 { q: "Untuk membuat kue, rasio gula dan tepung adalah 🍬:🍚 = 1:3. Jika ada 6 kg gula, berapa kg tepung yang dibutuhkan?", a: "18" },
                 { q: "Rasio telur dan susu dalam resep puding adalah 🥚:🥛 = 2:5. Jika Koki Cilik menggunakan 10 telur, berapa gelas susu yang dibutuhkan?", a: "25" },
-                { q: "Rasio pisang dan kiwi di lemari es adalah 🍌:🥝 = 4:3. Jika ada 12 pisang, berapa jumlah kiwi?", a: "9" },
-                { q: "Rasio lemon dan jeruk di keranjang adalah 🍋:🍊 = 2:3. Jika ada 8 lemon, berapa jumlah jeruk?", a: "12" },
-                { q: "Resep sirup menggunakan rasio gula dan air 🍬:💧 = 3:4. Jika Koki Cilik menggunakan 9 sendok gula, berapa sendok air yang dibutuhkan?", a: "12" },
-                { q: "Rasio mangga dan jambu adalah 🥭:🫑 = 2:3. Jika ada 6 mangga, berapa jumlah jambu?", a: "9" },
-                { q: "Rasio cokelat dan kacang adalah 🍫:🥜 = 5:2. Jika ada 15 gram cokelat, berapa gram kacang yang dibutuhkan?", a: "6" },
-                { q: "Untuk adonan, rasio tepung dan mentega adalah 🍚:🧈 = 4:1. Jika Koki Cilik menggunakan 16 gram tepung, berapa gram mentega yang dibutuhkan?", a: "4" }
+                { q: "Rasio pisang dan kiwi di lemari es adalah 🍌:🥝 = 4:3. Jika ada 12 pisang, berapa jumlah kiwi?", a: "9" }
             ],
             level4: [
                 { q: "Koki Cilik membuat 2 porsi jus dengan 10 buah stroberi. Berapa buah stroberi yang dibutuhkan untuk membuat 5 porsi jus?", a: "25" },
                 { q: "Dengan 3 kg tepung, Koki Cilik bisa membuat 12 roti. Berapa kg tepung yang dibutuhkan untuk membuat 20 roti?", a: "5" },
                 { q: "Koki Cilik membuat 5 kue dengan 15 butir telur. Berapa butir telur yang dibutuhkan untuk membuat 8 kue?", a: "24" },
                 { q: "Koki Cilik bisa mencampur 2 liter air dengan 3 kg gula. Berapa kg gula yang dibutuhkan untuk 10 liter air?", a: "15" },
-                { q: "Jika 10 gram bubuk cokelat bisa membuat 4 gelas minuman, berapa gram bubuk cokelat yang dibutuhkan untuk 6 gelas minuman?", a: "15" },
-                { q: "Sebuah resep membutuhkan 200 ml susu untuk 500 gram tepung. Berapa ml susu yang dibutuhkan untuk 1 kg (1000 gram) tepung?", a: "400" },
-                { q: "Jika 4 orang bisa menghabiskan 8 potong pizza, berapa potong pizza yang dibutuhkan untuk 6 orang?", a: "12" },
-                { q: "Sebuah mobil mainan membutuhkan 3 baterai untuk berjalan 60 menit. Berapa baterai yang dibutuhkan untuk 100 menit?", a: "5" },
-                { q: "Untuk mengecat 2 dinding, Koki Cilik membutuhkan 10 liter cat. Berapa liter cat yang dibutuhkan untuk 5 dinding?", a: "25" },
-                { q: "Jika 3 kg beras bisa memberi makan 6 orang, berapa kg beras yang dibutuhkan untuk 10 orang?", a: "5" }
+                { q: "Jika 10 gram bubuk cokelat bisa membuat 4 gelas minuman, berapa gram bubuk cokelat yang dibutuhkan untuk 6 gelas minuman?", a: "15" }
             ],
             level5: [
                 { q: "Jika 3 koki bisa membuat kue dalam 4 jam, berapa jam yang dibutuhkan oleh 6 koki untuk membuat kue yang sama?", a: "2" },
                 { q: "Untuk memanggang kue, Koki Cilik butuh 2 oven selama 30 menit. Jika dia menggunakan 4 oven, berapa menit waktu yang dibutuhkan?", a: "15" },
                 { q: "Jika 5 orang bisa menghabiskan 10 liter air dalam 2 hari, berapa hari air akan habis jika ada 10 orang?", a: "1" },
                 { q: "Jika 6 pekerja bisa menyelesaikan proyek dalam 10 hari, berapa hari yang dibutuhkan 5 pekerja untuk menyelesaikan proyek yang sama?", a: "12" },
-                { q: "Koki Cilik punya 2 keran yang bisa mengisi tangki dalam 6 jam. Berapa jam waktu yang dibutuhkan jika dia menggunakan 3 keran?", a: "4" },
-                { q: "Jika 4 koki bisa menyelesaikan 100 pesanan dalam 2 jam, berapa koki yang dibutuhkan untuk menyelesaikan 100 pesanan dalam 1 jam?", a: "8" },
-                { q: "Dengan kecepatan 60 km/jam, Koki Cilik sampai di toko dalam 2 jam. Berapa kecepatan yang dibutuhkan agar sampai dalam 1 jam?", a: "120" },
-                { q: "Jika 10 orang bisa menyelesaikan pekerjaan dalam 6 hari, berapa hari yang dibutuhkan oleh 12 orang?", a: "5" },
-                { q: "Untuk mencetak 100 buku, 4 mesin bekerja selama 5 jam. Jika 2 mesin yang digunakan, berapa jam waktu yang dibutuhkan?", a: "10" },
-                { q: "Jika 12 potong kue bisa dimakan 4 orang, berapa orang yang bisa menghabiskan kue tersebut jika jumlah kuenya hanya 6 potong?", a: "2" }
+                { q: "Koki Cilik punya 2 keran yang bisa mengisi tangki dalam 6 jam. Berapa jam waktu yang dibutuhkan jika dia menggunakan 3 keran?", a: "4" }
             ]
         };
 
+        // --- Variabel dan Elemen DOM ---
         const levels = ["level1", "level2", "level3", "level4", "level5"];
         let currentLevel = 0;
         let currentQuestionIndex = 0;
@@ -233,11 +218,12 @@
         let levelQuestions = [];
         let totalScore = 0;
         let studentName = "";
-        let levelAnswers = [];
 
         const introScreen = document.getElementById('intro-screen');
+        const levelSelectionScreen = document.getElementById('level-selection-screen');
         const gameScreen = document.getElementById('game-screen');
         const endScreen = document.getElementById('end-screen');
+
         const levelInfo = gameScreen.querySelector('.level-info h2');
         const levelDesc = gameScreen.querySelector('.level-info p');
         const scoreDisplay = document.getElementById('score');
@@ -245,52 +231,82 @@
         const feedbackText = document.getElementById('feedback-text');
         const submitBtn = document.getElementById('submit-btn');
         const nextBtn = document.getElementById('next-btn');
+        const backToLevelsBtn = document.getElementById('back-to-levels-btn');
+
         const finalScoreDisplay = document.getElementById('final-score');
         const studentNameInput = document.getElementById('student-name-input');
         const studentNameFinalDisplay = document.getElementById('student-name-final');
+        
         const ratioInputGroup = document.getElementById('ratio-input-group');
         const singleAnswerInput = document.getElementById('single-answer-input');
         const answerInput1 = document.getElementById('answer-input-1');
         const answerInput2 = document.getElementById('answer-input-2');
 
         const levelDescriptions = {
-            level1: "Pengenalan Rasio: Tuliskan perbandingan bahan-bahan yang Koki Cilik gunakan!",
-            level2: "Menyederhanakan Rasio: Sederhanakan perbandingan bahan-bahan resep ini!",
-            level3: "Menghitung Jumlah Sebenarnya: Berdasarkan rasio, cari tahu berapa banyak bahan yang Koki Cilik butuhkan!",
-            level4: "Perbandingan Senilai: Jika takaran resep bertambah, berapa banyak bahan yang dibutuhkan?",
-            level5: "Perbandingan Berbalik Nilai: Jika jumlah koki bertambah, berapa waktu yang dibutuhkan?"
+            level1: "Pengenalan Rasio: Tuliskan perbandingan bahan-bahan.",
+            level2: "Menyederhanakan Rasio: Sederhanakan perbandingan resep ini!",
+            level3: "Menghitung Jumlah: Cari tahu berapa banyak bahan yang dibutuhkan.",
+            level4: "Perbandingan Senilai: Jika takaran bertambah, bahan juga bertambah.",
+            level5: "Perbandingan Berbalik Nilai: Jika koki bertambah, waktu berkurang."
         };
 
         function startGame() {
             studentName = studentNameInput.value.trim();
             if (studentName) {
-                introScreen.style.display = 'none';
-                gameScreen.style.display = 'block';
-                loadLevel();
+                totalScore = parseInt(localStorage.getItem(studentName + '_totalScore')) || 0;
+                showLevelSelection();
             } else {
                 alert("Masukkan nama kamu terlebih dahulu!");
             }
         }
 
-        function loadLevel() {
-            if (currentLevel >= levels.length) {
-                showEndScreen();
+        function showLevelSelection() {
+            introScreen.classList.add('hidden');
+            gameScreen.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            levelSelectionScreen.classList.remove('hidden');
+
+            const unlockedLevel = parseInt(localStorage.getItem(studentName + '_unlockedLevel')) || 1;
+            const levelButtons = document.querySelectorAll('.level-button');
+
+            levelButtons.forEach((button, index) => {
+                const levelNum = index + 1;
+                button.classList.remove('locked');
+                button.innerHTML = `Level ${levelNum}`;
+
+                if (levelNum > unlockedLevel) {
+                    button.classList.add('locked');
+                    button.innerHTML = `<span class="lock-icon">🔒</span>`;
+                }
+            });
+        }
+
+        function selectLevel(levelNum) {
+            const unlockedLevel = parseInt(localStorage.getItem(studentName + '_unlockedLevel')) || 1;
+            if (levelNum > unlockedLevel) {
+                alert("Selesaikan level sebelumnya untuk membuka level ini!");
                 return;
             }
+            currentLevel = levelNum - 1;
+            levelSelectionScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            loadLevel();
+        }
+
+        function loadLevel() {
             currentScore = 0;
             currentQuestionIndex = 0;
             scoreDisplay.textContent = currentScore;
+            feedbackText.textContent = '';
+            
             const levelKey = levels[currentLevel];
             levelInfo.textContent = `Level ${currentLevel + 1}`;
             levelDesc.textContent = levelDescriptions[levelKey];
-            levelQuestions = shuffleArray(questions[levelKey]).slice(0, 4);
+            levelQuestions = shuffleArray(Object.values(questions)[currentLevel]);
             
             showQuestion();
         }
 
-       
-
-        // GANTI FUNGSI LAMA DENGAN INI
         function showQuestion() {
             if (currentQuestionIndex >= levelQuestions.length) {
                 endLevel();
@@ -298,120 +314,102 @@
             }
             const q = levelQuestions[currentQuestionIndex];
             questionText.textContent = q.q;
-            feedbackText.textContent = '';
             submitBtn.style.display = 'inline-block';
-            nextBtn.style.display = 'none';
+            nextBtn.classList.add('hidden');
+            backToLevelsBtn.classList.add('hidden');
             
-            // PERUBAHAN: Menambahkan properti 'score' dengan nilai awal 0
-            levelAnswers.push({ question: q.q, answer: null, status: null, score: 0 });
-
-            if (currentLevel === 0 || currentLevel === 1) {
-                ratioInputGroup.style.display = 'flex';
-                singleAnswerInput.style.display = 'none';
-                answerInput1.value = '';
-                answerInput2.value = '';
-                answerInput1.disabled = false;
-                answerInput2.disabled = false;
-            } else {
-                ratioInputGroup.style.display = 'none';
-                singleAnswerInput.style.display = 'inline-block';
-                singleAnswerInput.value = '';
-                singleAnswerInput.disabled = false;
-            }
+            // Atur input berdasarkan level
+            ratioInputGroup.classList.toggle('hidden', currentLevel >= 2);
+            singleAnswerInput.classList.toggle('hidden', currentLevel < 2);
+            [answerInput1, answerInput2, singleAnswerInput].forEach(input => {
+                input.value = '';
+                input.disabled = false;
+            });
         }
-// GANTI FUNGSI LAMA DENGAN INI
+
         function checkAnswer() {
             let userAnswer = '';
-            const currentAnswerData = levelAnswers[currentQuestionIndex];
             const correctAnswer = levelQuestions[currentQuestionIndex].a;
-            let isCorrect = false;
-
-            if (currentLevel === 0 || currentLevel === 1) {
+            
+            if (currentLevel < 2) {
                 userAnswer = `${answerInput1.value.trim()}:${answerInput2.value.trim()}`;
             } else {
                 userAnswer = singleAnswerInput.value.trim();
             }
             
-            currentAnswerData.answer = userAnswer;
-
-            if (currentLevel === 0) {
+            let isCorrect = false;
+            if (currentLevel === 0) { // Validasi lebih fleksibel untuk level 1
                 const userParts = userAnswer.split(':');
                 const correctParts = correctAnswer.split(':');
                 if (userParts.length === 2 && correctParts.length === 2) {
-                    const userRatio = parseFloat(userParts[0]) / parseFloat(userParts[1]);
-                    const correctRatio = parseFloat(correctParts[0]) / parseFloat(correctParts[1]);
-                    if (!isNaN(userRatio) && userRatio.toFixed(2) === correctRatio.toFixed(2)) {
-                        isCorrect = true;
-                    }
+                    isCorrect = (parseFloat(userParts[0]) / parseFloat(userParts[1])) === (parseFloat(correctParts[0]) / parseFloat(correctParts[1]));
                 }
             } else {
-                if (userAnswer === correctAnswer) {
-                    isCorrect = true;
-                }
+                isCorrect = userAnswer === correctAnswer;
             }
 
             if (isCorrect) {
-                currentScore += 25;
+                currentScore += 20; // 5 soal per level, jadi 20 poin per soal
                 scoreDisplay.textContent = currentScore;
                 feedbackText.textContent = "Jawaban benar! 🎉";
                 feedbackText.className = 'feedback correct';
-                currentAnswerData.status = 'Benar';
-                currentAnswerData.score = 25; // PERUBAHAN: Memberi skor 25 untuk jawaban ini
             } else {
                 feedbackText.textContent = "Jawaban salah.";
                 feedbackText.className = 'feedback incorrect';
-                currentAnswerData.status = 'Salah';
-                // Jika salah, skor tetap 0 (sesuai nilai awal)
             }
+            
+            // Kirim data per jawaban
+            sendDataToSheet(levelQuestions[currentQuestionIndex].q, userAnswer, isCorrect ? 'Benar' : 'Salah');
 
             submitBtn.style.display = 'none';
-            nextBtn.style.display = 'inline-block';
-            if (currentLevel === 0 || currentLevel === 1) {
-                answerInput1.disabled = true;
-                answerInput2.disabled = true;
-            } else {
-                singleAnswerInput.disabled = true;
-            }
+            nextBtn.classList.remove('hidden');
+            [answerInput1, answerInput2, singleAnswerInput].forEach(input => input.disabled = true);
         }
 
         function nextQuestion() {
             currentQuestionIndex++;
+            feedbackText.textContent = '';
             showQuestion();
         }
 
-        // GANTI FUNGSI LAMA DENGAN INI
         function endLevel() {
             totalScore += currentScore;
-            
-            // Kirim semua data jawaban level ini sekaligus
-            sendDataToSheet(levelAnswers);
-            levelAnswers = []; // Kosongkan setelah dikirim
+            localStorage.setItem(studentName + '_totalScore', totalScore);
 
-            const levelYangSelesai = currentLevel + 1;
-            currentLevel++; // Pindahkan kenaikan level ke sini, SETELAH data dikirim
+            const unlockedLevel = parseInt(localStorage.getItem(studentName + '_unlockedLevel')) || 1;
+            const nextLevel = currentLevel + 2;
 
-            if (currentLevel < levels.length) {
-                alert(`Level ${levelYangSelesai} Selesai! Skor Level Ini: ${currentScore}. Lanjut ke Level ${currentLevel + 1}!`);
-                loadLevel();
+            if (nextLevel > unlockedLevel && currentScore >= 60) { // Syarat skor minimal 60 untuk buka level baru
+                localStorage.setItem(studentName + '_unlockedLevel', nextLevel);
+                alert(`Level ${currentLevel + 1} Selesai! Skor: ${currentScore}. Level selanjutnya terbuka!`);
+            } else if (currentScore < 60) {
+                 alert(`Level ${currentLevel + 1} Selesai! Skor: ${currentScore}. Coba lagi untuk mencapai skor minimal 60 agar level selanjutnya terbuka.`);
             } else {
+                alert(`Level ${currentLevel + 1} Selesai! Skor: ${currentScore}.`);
+            }
+            
+            if (currentLevel + 1 === levels.length) {
                 showEndScreen();
+            } else {
+                backToLevelsBtn.classList.remove('hidden');
+                nextBtn.classList.add('hidden');
             }
         }
 
         function showEndScreen() {
-            gameScreen.style.display = 'none';
-            endScreen.style.display = 'block';
+            gameScreen.classList.add('hidden');
+            endScreen.classList.remove('hidden');
             studentNameFinalDisplay.textContent = studentName;
             finalScoreDisplay.textContent = totalScore;
         }
 
-        function resetGame() {
-            endScreen.style.display = 'none';
-            introScreen.style.display = 'block';
-            studentNameInput.value = '';
-            totalScore = 0;
-            currentLevel = 0;
-            currentQuestionIndex = 0;
+        function resetProgress() {
+            if (confirm("Apakah kamu yakin ingin mengulang semua progress? Level yang terbuka akan terkunci kembali.")) {
+                localStorage.removeItem(studentName + '_unlockedLevel');
+                localStorage.removeItem(studentName + '_totalScore');
+                totalScore = 0;
+                showLevelSelection();
+            }
         }
 
         function shuffleArray(array) {
@@ -422,27 +420,22 @@
             return array;
         }
 
-        // GANTI FUNGSI LAMA DENGAN INI
-        async function sendDataToSheet(answers) {
+        async function sendDataToSheet(question, answer, status) {
+            // Fungsi ini tetap sama, mengirim data per soal
             const params = {
                 nama: studentName,
                 level: `Level ${currentLevel + 1}`,
-                // PERUBAHAN: Skor total level tidak perlu dikirim lagi
-                jawaban: JSON.stringify(answers) 
+                soal: question,
+                jawaban: answer,
+                status: status
             };
-
             const formData = new URLSearchParams(params).toString();
-            
             try {
-                const response = await fetch(SCRIPT_URL, {
+                await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: formData,
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 });
-                const result = await response.json();
-                console.log('Sukses:', result);
             } catch(error) {
                 console.error('Error saat mengirim data:', error);
             }

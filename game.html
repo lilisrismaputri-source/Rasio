@@ -11,7 +11,6 @@
 
     <style>
         body {
-            /* Menggunakan font 'Comic Neue' dari Google Fonts */
             font-family: 'Comic Neue', cursive;
             background: linear-gradient(135deg, #f0e68c, #ffebcd);
             display: flex;
@@ -87,7 +86,7 @@
             gap: 5px;
             margin-top: 10px;
         }
-        #student-name-input, #student-nisn-input, #single-answer-input, .answer-input-group input {
+        #student-name-input, #single-answer-input, .answer-input-group input {
             border: 2px solid #d2691e;
             border-radius: 10px;
             padding: 10px;
@@ -97,7 +96,7 @@
             max-width: 250px;
             margin: 5px auto;
             display: block;
-            font-family: 'Comic Neue', cursive; /* Pastikan input juga menggunakan font yang sama */
+            font-family: 'Comic Neue', cursive;
         }
         .answer-input-group input {
              width: 80px;
@@ -117,7 +116,7 @@
             cursor: pointer;
             margin-top: 15px;
             transition: transform 0.2s;
-            font-family: 'Comic Neue', cursive; /* Pastikan tombol juga menggunakan font yang sama */
+            font-family: 'Comic Neue', cursive;
         }
         button:hover {
             transform: translateY(-3px);
@@ -133,10 +132,9 @@
     <div class="game-container">
         <div id="intro-screen">
             <h1>🧑‍🍳 Resep Ajaib Koki Cilik 🧑‍🍳</h1>
-            <p>Halo, koki cilik! Silakan masuk untuk melanjutkan petualanganmu.</p>
+            <p>Halo, koki cilik! Selamat datang di dapur ajaib. Siapa nama kamu?</p>
             <input type="text" id="student-name-input" placeholder="Nama Lengkap Sesuai Absen">
-            <input type="number" id="student-nisn-input" placeholder="Masukkan NISN Kamu">
-            <button onclick="startGame()">Masuk & Mulai!</button>
+            <button onclick="startGame()">Mulai Petualangan!</button>
         </div>
         
         <div id="level-selection-screen" class="hidden">
@@ -176,8 +174,8 @@
     </div>
 
     <script>
-        // PENTING: Ganti dengan URL Google Apps Script BARU Anda
-        const SCRIPT_URL = 'URL_APPS_SCRIPT_GAME_BARU_ANDA';
+        // PENTING: Ganti dengan URL Google Apps Script Anda untuk MENYIMPAN JAWABAN
+        const SCRIPT_URL = 'URL_APPS_SCRIPT_GAME_ANDA';
                
         const questions = {
              level1: [
@@ -202,9 +200,8 @@
         let currentQuestionIndex = 0;
         let currentScore = 0;
         let levelQuestions = [];
-        let totalScore = 0; // totalScore is not used for grading, just for display if needed.
+        let totalScore = 0;
         let studentName = "";
-        let studentNisn = "";
         let unlockedLevel = 1;
 
         const introScreen = document.getElementById('intro-screen');
@@ -220,7 +217,6 @@
         const nextBtn = document.getElementById('next-btn');
         const backToLevelsBtn = document.getElementById('back-to-levels-btn');
         const studentNameInput = document.getElementById('student-name-input');
-        const studentNisnInput = document.getElementById('student-nisn-input');
         const studentNameFinalDisplay = document.getElementById('student-name-final');
         const ratioInputGroup = document.getElementById('ratio-input-group');
         const singleAnswerInput = document.getElementById('single-answer-input');
@@ -235,25 +231,14 @@
             level5: "Perbandingan Berbalik Nilai: Jika koki bertambah, waktu berkurang."
         };
 
-        async function startGame() {
+        function startGame() {
             studentName = studentNameInput.value.trim();
-            studentNisn = studentNisnInput.value.trim();
-            if (studentName && studentNisn) {
-                try {
-                    const response = await fetch(`${SCRIPT_URL}?nama=${encodeURIComponent(studentName)}&nisn=${encodeURIComponent(studentNisn)}`);
-                    const result = await response.json();
-                    if (result.status === 'sukses') {
-                        unlockedLevel = result.levelTerbuka;
-                        showLevelSelection();
-                    } else {
-                        alert("Login Gagal: " + result.pesan);
-                    }
-                } catch (error) {
-                    console.error('Gagal mengambil progres:', error);
-                    alert('Terjadi kesalahan. Tidak dapat mengambil progres.');
-                }
+            if (studentName) {
+                // Ambil progres dari localStorage berdasarkan nama siswa
+                unlockedLevel = parseInt(localStorage.getItem(studentName + '_unlockedLevel')) || 1;
+                showLevelSelection();
             } else {
-                alert("Nama Lengkap dan NISN tidak boleh kosong!");
+                alert("Masukkan nama kamu terlebih dahulu!");
             }
         }
 
@@ -262,11 +247,13 @@
             gameScreen.classList.add('hidden');
             endScreen.classList.add('hidden');
             levelSelectionScreen.classList.remove('hidden');
+
             const levelButtons = document.querySelectorAll('.level-button');
             levelButtons.forEach((button, index) => {
                 const levelNum = index + 1;
                 button.classList.remove('locked');
                 button.innerHTML = `Level ${levelNum}`;
+
                 if (levelNum > unlockedLevel) {
                     button.classList.add('locked');
                     button.innerHTML = `<span class="lock-icon">🔒</span>`;
@@ -354,16 +341,17 @@
             showQuestion();
         }
 
-        async function endLevel() {
+        function endLevel() {
             totalScore += currentScore;
             const justCompletedLevel = currentLevel + 1;
             const nextLevelToUnlock = currentLevel + 2;
+            const currentUnlocked = parseInt(localStorage.getItem(studentName + '_unlockedLevel')) || 1;
 
-            if (nextLevelToUnlock > unlockedLevel && currentScore >= 80) {
+            if (nextLevelToUnlock > currentUnlocked && currentScore >= 80) {
+                localStorage.setItem(studentName + '_unlockedLevel', nextLevelToUnlock);
                 unlockedLevel = nextLevelToUnlock;
-                await saveProgress();
                 alert(`Level ${justCompletedLevel} Selesai! Skor: ${currentScore}. Selamat, Level ${justCompletedLevel + 1} terbuka!`);
-            } else if (currentScore < 80 && nextLevelToUnlock > unlockedLevel) {
+            } else if (currentScore < 80 && nextLevelToUnlock > currentUnlocked) {
                  alert(`Level ${justCompletedLevel} Selesai! Skor: ${currentScore}. Kamu butuh skor minimal 80 untuk membuka level selanjutnya. Coba lagi ya!`);
             } else {
                 alert(`Level ${justCompletedLevel} Selesai! Skor: ${currentScore}.`);
@@ -384,7 +372,13 @@
         }
 
         function resetProgress() {
-            alert("Fitur ini tidak menghapus data di server. Hubungi guru untuk reset total.");
+            if (studentName && confirm("Apakah kamu yakin ingin mengulang semua progress untuk nama '" + studentName + "'? Level yang terbuka akan terkunci kembali.")) {
+                localStorage.removeItem(studentName + '_unlockedLevel');
+                unlockedLevel = 1;
+                showLevelSelection();
+            } else if (!studentName) {
+                alert("Silakan masukkan nama terlebih dahulu sebelum mereset progress.");
+            }
         }
 
         function shuffleArray(array) {
@@ -395,28 +389,10 @@
             return array;
         }
 
-        async function saveProgress() {
-            const params = {
-                aksi: 'simpanProgress',
-                nama: studentName,
-                nisn: studentNisn,
-                levelTerbuka: unlockedLevel
-            };
-            const formData = new URLSearchParams(params).toString();
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                });
-            } catch(error) {
-                console.error('Gagal menyimpan progres:', error);
-            }
-        }
-
         async function sendDataToSheet(question, answer, status) {
             const params = {
-                aksi: 'simpanJawaban',
+                // 'aksi' bisa ditambahkan jika Code.gs Anda membutuhkannya
+                // aksi: 'simpanJawaban', 
                 nama: studentName,
                 level: `Level ${currentLevel + 1}`,
                 soal: question,

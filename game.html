@@ -79,14 +79,9 @@
             padding: 20px;
             margin-bottom: 20px;
         }
-        .answer-input-group {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            margin-top: 10px;
-        }
-        #student-name-input, #single-answer-input, .answer-input-group input {
+        
+        /* --- KODE CSS INPUT YANG DIPERBAIKI --- */
+        #student-name-input {
             border: 2px solid #d2691e;
             border-radius: 10px;
             padding: 10px;
@@ -98,14 +93,33 @@
             display: block;
             font-family: 'Comic Neue', cursive;
         }
+        .answer-input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
         .answer-input-group input {
-             width: 80px;
-             display: inline-block;
+            border: 2px solid #d2691e;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1em;
+            text-align: center;
+            width: 80px;
+            font-family: 'Comic Neue', cursive;
         }
         #single-answer-input {
+            border: 2px solid #d2691e;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1em;
+            text-align: center;
             width: 150px;
-            display: inline-block;
+            font-family: 'Comic Neue', cursive;
         }
+        /* --- AKHIR DARI KODE CSS INPUT --- */
+
         button {
             background-color: #d2691e;
             color: white;
@@ -155,7 +169,11 @@
             <div class="question-box">
                 <p id="question-text"></p>
                 <div id="input-area">
-                    <div id="ratio-input-group" class="answer-input-group hidden"><input type="text" id="answer-input-1">: <input type="text" id="answer-input-2"></div>
+                    <div id="ratio-input-group" class="answer-input-group hidden">
+                        <input type="text" id="answer-input-1">
+                        :
+                        <input type="text" id="answer-input-2">
+                    </div>
                     <input type="text" id="single-answer-input" class="hidden">
                     <button id="submit-btn" onclick="checkAnswer()">Jawab!</button>
                 </div>
@@ -175,7 +193,7 @@
 
     <script>
         // PENTING: Ganti dengan URL Google Apps Script Anda untuk MENYIMPAN JAWABAN
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqbrgFx04PX3qKKnKwpr5ZJsapy0GOp3y1C7zv-BaB2J_9PnR63QpyUtWUeaKh1YeV/exec';
+        const SCRIPT_URL = 'URL_APPS_SCRIPT_GAME_ANDA';
                
         const questions = {
              level1: [
@@ -234,7 +252,6 @@
         function startGame() {
             studentName = studentNameInput.value.trim();
             if (studentName) {
-                // Ambil progres dari localStorage berdasarkan nama siswa
                 unlockedLevel = parseInt(localStorage.getItem(studentName + '_unlockedLevel')) || 1;
                 showLevelSelection();
             } else {
@@ -247,13 +264,11 @@
             gameScreen.classList.add('hidden');
             endScreen.classList.add('hidden');
             levelSelectionScreen.classList.remove('hidden');
-
             const levelButtons = document.querySelectorAll('.level-button');
             levelButtons.forEach((button, index) => {
                 const levelNum = index + 1;
                 button.classList.remove('locked');
                 button.innerHTML = `Level ${levelNum}`;
-
                 if (levelNum > unlockedLevel) {
                     button.classList.add('locked');
                     button.innerHTML = `<span class="lock-icon">🔒</span>`;
@@ -294,8 +309,11 @@
             submitBtn.style.display = 'inline-block';
             nextBtn.classList.add('hidden');
             backToLevelsBtn.classList.add('hidden');
-            ratioInputGroup.classList.toggle('hidden', currentLevel >= 2);
-            singleAnswerInput.classList.toggle('hidden', currentLevel < 2);
+            
+            const isRatioLevel = currentLevel < 2;
+            ratioInputGroup.classList.toggle('hidden', !isRatioLevel);
+            singleAnswerInput.classList.toggle('hidden', isRatioLevel);
+
             [answerInput1, answerInput2, singleAnswerInput].forEach(input => {
                 input.value = '';
                 input.disabled = false;
@@ -321,7 +339,7 @@
                 isCorrect = userAnswer === correctAnswer;
             }
 
-            const questionScore = isCorrect ? 20 : 0; // Tentukan skor untuk soal ini
+            const questionScore = isCorrect ? 20 : 0;
 
             if (isCorrect) {
                 currentScore += 20;
@@ -333,14 +351,12 @@
                 feedbackText.className = 'feedback incorrect';
             }
             
-            // Kirim data beserta skornya
             sendDataToSheet(levelQuestions[currentQuestionIndex].q, userAnswer, isCorrect ? 'Benar' : 'Salah', questionScore);
             
             submitBtn.style.display = 'none';
             nextBtn.classList.remove('hidden');
             [answerInput1, answerInput2, singleAnswerInput].forEach(input => input.disabled = true);
         }
-
 
         function nextQuestion() {
             currentQuestionIndex++;
@@ -396,14 +412,14 @@
             return array;
         }
 
-                async function sendDataToSheet(question, answer, status, score) { // Tambahkan parameter 'score'
+        async function sendDataToSheet(question, answer, status, score) {
             const params = {
                 nama: studentName,
                 level: `Level ${currentLevel + 1}`,
                 soal: question,
                 jawaban: answer,
                 status: status,
-                skor: score // Tambahkan skor ke data yang dikirim
+                skor: score
             };
             const formData = new URLSearchParams(params).toString();
             try {
@@ -419,6 +435,3 @@
     </script>
 </body>
 </html>
-
-
-

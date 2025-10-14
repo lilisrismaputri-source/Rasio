@@ -320,6 +320,9 @@
             } else {
                 isCorrect = userAnswer === correctAnswer;
             }
+
+            const questionScore = isCorrect ? 20 : 0; // Tentukan skor untuk soal ini
+
             if (isCorrect) {
                 currentScore += 20;
                 scoreDisplay.textContent = currentScore;
@@ -329,11 +332,15 @@
                 feedbackText.textContent = "Jawaban salah.";
                 feedbackText.className = 'feedback incorrect';
             }
-            sendDataToSheet(levelQuestions[currentQuestionIndex].q, userAnswer, isCorrect ? 'Benar' : 'Salah');
+            
+            // Kirim data beserta skornya
+            sendDataToSheet(levelQuestions[currentQuestionIndex].q, userAnswer, isCorrect ? 'Benar' : 'Salah', questionScore);
+            
             submitBtn.style.display = 'none';
             nextBtn.classList.remove('hidden');
             [answerInput1, answerInput2, singleAnswerInput].forEach(input => input.disabled = true);
         }
+
 
         function nextQuestion() {
             currentQuestionIndex++;
@@ -389,15 +396,14 @@
             return array;
         }
 
-        async function sendDataToSheet(question, answer, status) {
+                async function sendDataToSheet(question, answer, status, score) { // Tambahkan parameter 'score'
             const params = {
-                // 'aksi' bisa ditambahkan jika Code.gs Anda membutuhkannya
-                // aksi: 'simpanJawaban', 
                 nama: studentName,
                 level: `Level ${currentLevel + 1}`,
                 soal: question,
                 jawaban: answer,
-                status: status
+                status: status,
+                skor: score // Tambahkan skor ke data yang dikirim
             };
             const formData = new URLSearchParams(params).toString();
             try {
@@ -413,3 +419,4 @@
     </script>
 </body>
 </html>
+
